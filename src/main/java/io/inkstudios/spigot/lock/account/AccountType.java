@@ -1,5 +1,7 @@
 package io.inkstudios.spigot.lock.account;
 
+import java.util.Objects;
+
 public enum AccountType {
 	
 	PERSISTENT("persistent", PersistentLockAccount.class),
@@ -19,6 +21,18 @@ public enum AccountType {
 	
 	public Class<? extends LockAccount> getLockAccount() {
 		return this.lockAccount;
+	}
+	
+	public static AccountType getAccountTypeOrPersistent(String name) {
+		Objects.requireNonNull(name, "name");
+		
+		for (AccountType accountType : AccountType.values()) {
+			if (accountType.getName().equalsIgnoreCase(name)) {
+				return accountType;
+			}
+		}
+		
+		return AccountType.PERSISTENT;
 	}
 	
 }
