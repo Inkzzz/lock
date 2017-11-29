@@ -27,7 +27,7 @@ abstract class SimpleLockAccount implements LockAccount {
 	
 	protected SimpleLockAccount(UUID uniqueId, List<Lock> locks) {
 		this.uniqueId = uniqueId;
-		this.locks.addAll(locks);
+		locks.forEach(this::addLockWithoutSaving);
 	}
 	
 	protected SimpleLockAccount(UUID uniqueId) {
