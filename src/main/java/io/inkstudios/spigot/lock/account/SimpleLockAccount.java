@@ -44,7 +44,7 @@ abstract class SimpleLockAccount implements LockAccount {
 		return Optional.ofNullable(Bukkit.getPlayer(this.uniqueId));
 	}
 	
-	protected void addLockWithoutSaving(Lock lock) {
+	protected final void addLockWithoutSaving(Lock lock) {
 		this.locks.add(lock);
 		lock.getLockLocations().forEach(location -> this.locationToLock.put(location, lock));
 	}
