@@ -56,6 +56,11 @@ abstract class SimpleLockAccount implements LockAccount {
 		this.lockState = lockState;
 	}
 	
+	@Override
+	public Optional<Lock> getLock(Location location) {
+		return Optional.ofNullable(this.locationToLock.get(location));
+	}
+	
 	protected final void addLockWithoutSaving(Lock lock) {
 		this.locks.add(lock);
 		lock.getLockLocations().forEach(location -> this.locationToLock.put(location, lock));

@@ -29,6 +29,7 @@ public final class LockPlugin extends JavaPlugin {
 		this.getCommand("unlock").setExecutor(new UnlockCommand());
 		
 		this.getServer().getPluginManager().registerEvents(new AccountListener(), this);
+		this.getServer().getPluginManager().registerEvents(new LockListener(), this);
 	}
 	
 	@Override

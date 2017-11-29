@@ -22,6 +22,8 @@ public interface LockAccount extends PersistentData {
 	
 	void setState(LockState state);
 	
+	Optional<Lock> getLock(Location location);
+	
 	void addLock(Lock lock);
 	
 	void removeLock(Lock lock);

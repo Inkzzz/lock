@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public final class AccountRegistry {
 	
@@ -113,6 +114,10 @@ public final class AccountRegistry {
 		return this.lockAccounts.computeIfAbsent(uniqueId, this::createAccount);
 	}
 	
+	public void invalidateAccount(UUID uniqueId) {
+		this.lockAccounts.remove(uniqueId);
+	}
+	
 	private LockAccount createAccount(UUID uniqueId) {
 		switch (this.accountType) {
 			case PERSISTENT:
@@ -126,9 +131,9 @@ public final class AccountRegistry {
 						+ this.accountType.getName());
 		}
 	}
-
-	public void invalidateAccount(UUID uniqueId) {
-		this.lockAccounts.remove(uniqueId);
+	
+	public Stream<LockAccount> streamAccounts() {
+		return this.lockAccounts.values().stream();
 	}
 	
 }
