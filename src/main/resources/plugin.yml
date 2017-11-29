@@ -1,0 +1,6 @@
+name: ${project.name}
+version: ${project.version}
+main: io.inkstudios.spigot.lock.LockPlugin
+commands:
+  lock:
+  unlock:
