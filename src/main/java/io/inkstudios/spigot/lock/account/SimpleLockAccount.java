@@ -1,6 +1,7 @@
 package io.inkstudios.spigot.lock.account;
 
 import io.inkstudios.spigot.lock.Lock;
+import io.inkstudios.spigot.lock.LockState;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -24,6 +25,7 @@ abstract class SimpleLockAccount implements LockAccount {
 	private final Map<Location, Lock> locationToLock = new ConcurrentHashMap<>();
 	
 	private boolean marked;
+	private LockState lockState;
 	
 	protected SimpleLockAccount(UUID uniqueId, List<Lock> locks) {
 		this.uniqueId = uniqueId;
@@ -42,6 +44,16 @@ abstract class SimpleLockAccount implements LockAccount {
 	@Override
 	public Optional<Player> getPlayer() {
 		return Optional.ofNullable(Bukkit.getPlayer(this.uniqueId));
+	}
+	
+	@Override
+	public LockState getState() {
+		return this.lockState;
+	}
+	
+	@Override
+	public void setState(LockState lockState) {
+		this.lockState = lockState;
 	}
 	
 	protected final void addLockWithoutSaving(Lock lock) {

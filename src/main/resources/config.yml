@@ -4,3 +4,5 @@ mysql:
   database: database
   username: root
   password: password
+
+account-type: persistent

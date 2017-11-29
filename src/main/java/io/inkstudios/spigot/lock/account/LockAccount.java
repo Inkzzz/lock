@@ -1,6 +1,7 @@
 package io.inkstudios.spigot.lock.account;
 
 import io.inkstudios.spigot.lock.Lock;
+import io.inkstudios.spigot.lock.LockState;
 import io.inkstudios.spigot.lock.data.PersistentData;
 
 import org.bukkit.Location;
@@ -16,6 +17,10 @@ public interface LockAccount extends PersistentData {
 	UUID getUniqueId();
 	
 	Optional<Player> getPlayer();
+	
+	LockState getState();
+	
+	void setState(LockState state);
 	
 	void addLock(Lock lock);
 	

@@ -3,6 +3,8 @@ package io.inkstudios.spigot.lock;
 import io.inkstudios.spigot.lock.account.AccountListener;
 import io.inkstudios.spigot.lock.account.AccountRegistry;
 import io.inkstudios.spigot.lock.account.AccountType;
+import io.inkstudios.spigot.lock.command.LockCommand;
+import io.inkstudios.spigot.lock.command.UnlockCommand;
 import io.inkstudios.spigot.lock.database.LockMySQLDatabase;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +24,9 @@ public final class LockPlugin extends JavaPlugin {
 	public void onEnable() {
 		LockPlugin.instance = this;
 		this.loadSettings();
+		
+		this.getCommand("lock").setExecutor(new LockCommand());
+		this.getCommand("unlock").setExecutor(new UnlockCommand());
 		
 		this.getServer().getPluginManager().registerEvents(new AccountListener(), this);
 	}
