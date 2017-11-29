@@ -23,7 +23,7 @@ abstract class SimpleLockAccount implements LockAccount {
 	private final List<Lock> locks = new ArrayList<>();
 	private final Map<Location, Lock> locationToLock = new ConcurrentHashMap<>();
 	
-	protected boolean marked;
+	private boolean marked;
 	
 	protected SimpleLockAccount(UUID uniqueId, List<Lock> locks) {
 		this.uniqueId = uniqueId;
@@ -106,17 +106,17 @@ abstract class SimpleLockAccount implements LockAccount {
 	}
 	
 	@Override
-	public void markForWrite() {
+	public final void markForWrite() {
 		this.marked = true;
 	}
 	
 	@Override
-	public void unmarkForWrite() {
+	public final void unmarkForWrite() {
 		this.marked = false;
 	}
 	
 	@Override
-	public boolean isMarkedForWrite() {
+	public final boolean isMarkedForWrite() {
 		return this.marked;
 	}
 	
