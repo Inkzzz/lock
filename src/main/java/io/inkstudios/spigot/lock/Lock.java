@@ -18,6 +18,7 @@ public final class Lock {
 	
 	public static final class Builder {
 		
+		private int id;
 		private UUID owner;
 		private final Set<Location> lockLocations = new HashSet<>();
 		
@@ -27,7 +28,12 @@ public final class Lock {
 		
 		public Lock build() {
 			Objects.requireNonNull(this.owner, "owner");
-			return new Lock(this.owner, this.lockLocations);
+			return new Lock(this.id, this.owner, this.lockLocations);
+		}
+		
+		public Builder setId(int id) {
+			this.id = id;
+			return this;
 		}
 		
 		public Builder setOwner(UUID owner) {
@@ -53,12 +59,22 @@ public final class Lock {
 		
 	}
 	
+	private int id;
 	private final UUID owner;
 	private final Set<Location> lockLocations = new HashSet<>();
 	
-	private Lock(UUID owner, Set<Location> lockLocations) {
+	private Lock(int id, UUID owner, Set<Location> lockLocations) {
+		this.id = id;
 		this.owner = owner;
 		this.lockLocations.addAll(lockLocations);
+	}
+	
+	public int getId() {
+		return this.id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public UUID getOwner() {
