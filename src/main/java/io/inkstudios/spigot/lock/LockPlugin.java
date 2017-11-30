@@ -5,6 +5,7 @@ import io.inkstudios.spigot.lock.account.AccountRegistry;
 import io.inkstudios.spigot.lock.account.AccountType;
 import io.inkstudios.spigot.lock.account.LockAccount;
 import io.inkstudios.spigot.lock.command.LockCommand;
+import io.inkstudios.spigot.lock.command.LocksCommand;
 import io.inkstudios.spigot.lock.command.UnlockCommand;
 import io.inkstudios.spigot.lock.database.LockMySQLDatabase;
 
@@ -26,6 +27,7 @@ public final class LockPlugin extends JavaPlugin {
 		LockPlugin.instance = this;
 		this.loadSettings();
 		
+		this.getCommand("locks").setExecutor(new LocksCommand());
 		this.getCommand("lock").setExecutor(new LockCommand());
 		this.getCommand("unlock").setExecutor(new UnlockCommand());
 		

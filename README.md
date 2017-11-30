@@ -10,6 +10,7 @@ you'd unlock your own object, but interacting with their object.
 ## Commands
 - /lock - sets your status to "lock"
 - /unlock - sets your status to "unlock"
+- /locks - view the help menu
 
 ## 
 The bypass permission to unlock, lock, and enter chests is "melondev.lock.bypass"

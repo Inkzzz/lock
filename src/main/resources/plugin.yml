@@ -4,3 +4,4 @@ main: io.inkstudios.spigot.lock.LockPlugin
 commands:
   lock:
   unlock:
+  locks:
