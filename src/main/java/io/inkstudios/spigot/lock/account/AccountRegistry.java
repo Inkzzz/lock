@@ -30,6 +30,8 @@ public final class AccountRegistry {
 			return;
 		}
 		
+		this.createPlayerDataFolderIfNotExists();
+		
 		Path file = this.lazyPlayerDataPath.get();
 		
 		file.forEach(path -> {
@@ -61,16 +63,24 @@ public final class AccountRegistry {
 	}
 	
 	private File getDataFile(UUID uniqueId) {
-		Path path = this.getDataFile(uniqueId.toString());
-		
-		if (path == null) {
-			throw new AccountException("Failed to get file for " + uniqueId.toString());
-		}
-		
-		return path.toFile();
+		return this.getDataFile(this.lazyPlayerDataPath.get(), uniqueId.toString());
 	}
 	
-	private Path getDataFile(String pointer) {
+	private File getDataFile(Path path, String pointer) {
+		File file = path.resolve(pointer + ".yml").toFile();
+	
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return file;
+	}
+	
+	private Path getDataFolder(String pointer) {
 		Path file = this.lazyPlayerDataPath.get().resolve(pointer + ".yml");
 		
 		if (!this.validateFile(file)) {

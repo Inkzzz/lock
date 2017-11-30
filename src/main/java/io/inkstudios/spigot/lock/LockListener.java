@@ -5,6 +5,7 @@ import io.inkstudios.spigot.lock.account.LockAccount;
 import io.inkstudios.spigot.lock.cache.Lazy;
 import io.inkstudios.spigot.lock.util.ChatUtil;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -53,18 +54,28 @@ public class LockListener implements Listener {
 			if (!player.hasPermission(LockListener.BYPASS_PERMISSION) && !lockFound.getOwner().equals(player.getUniqueId())) {
 				event.setCancelled(true);
 				event.setUseInteractedBlock(Event.Result.DENY);
-				player.sendMessage(ChatUtil.toColour("&cThis object is locked."));
+				player.sendMessage(ChatUtil.toColour("&cThis object is locked and owned by ."
+						+ Bukkit.getOfflinePlayer(lockFound.getOwner()).getName()));
+				return;
 			}
 			
 			LockState state = account.getState();
 			
-			if (state != null && state == LockState.UNLOCK) {
-				account.removeLock(lockFound);
-				account.setState(null);
-				
-				player.sendMessage(ChatUtil.toColour("&cYou have removed your lock on this object."));
+			if (state == null) {
+				return;
 			}
 			
+			event.setCancelled(true);
+			event.setUseInteractedBlock(Event.Result.DENY);
+			
+			if (state == LockState.UNLOCK) {
+				account.removeLock(lockFound);
+				player.sendMessage(ChatUtil.toColour("&cYou have removed your lock on this object."));
+			} else if (state == LockState.LOCK) {
+				player.sendMessage(ChatUtil.toColour("&cThis object is already locked by you."));
+			}
+			
+			account.setState(null);
 			return;
 		}
 		
@@ -73,6 +84,9 @@ public class LockListener implements Listener {
 		if (state == null || state != LockState.LOCK) {
 			return;
 		}
+		
+		event.setCancelled(true);
+		event.setUseInteractedBlock(Event.Result.DENY);
 		
 		Lock.Builder lockBuilder = Lock.builder()
 				.setOwner(player.getUniqueId())

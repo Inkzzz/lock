@@ -41,11 +41,15 @@ public final class LockPlugin extends JavaPlugin {
 		this.getConfig().options().copyDefaults(true);
 		this.saveDefaultConfig();
 		
-		this.accountRegistry = new AccountRegistry(AccountType
-				.getAccountTypeOrPersistent(this.getConfig().getString("account-type")));
+		AccountType accountType = AccountType
+				.getAccountTypeOrPersistent(this.getConfig().getString("account-type"));
+		
+		this.accountRegistry = new AccountRegistry(accountType);
 		this.accountRegistry.loadPlayerData();
 		
-		this.loadSqlDatabase();
+		if (accountType == AccountType.MYSQL) {
+			this.loadSqlDatabase();
+		}
 	}
 	
 	private void loadSqlDatabase() {
