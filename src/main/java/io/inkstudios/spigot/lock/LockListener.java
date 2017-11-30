@@ -54,7 +54,7 @@ public class LockListener implements Listener {
 			if (!player.hasPermission(LockListener.BYPASS_PERMISSION) && !lockFound.getOwner().equals(player.getUniqueId())) {
 				event.setCancelled(true);
 				event.setUseInteractedBlock(Event.Result.DENY);
-				player.sendMessage(ChatUtil.toColour("&cThis object is locked and owned by ."
+				player.sendMessage(ChatUtil.toColour("&cThis object is locked and owned by "
 						+ Bukkit.getOfflinePlayer(lockFound.getOwner()).getName()));
 				return;
 			}
