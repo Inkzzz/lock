@@ -16,6 +16,14 @@ public final class LocationUtil {
 		throw new IllegalStateException("Cannot create an instance of " + this.getClass().getSimpleName());
 	}
 	
+	/**
+	 * Serializes the specified location {@code location}
+	 *
+	 * <p>Each location element will be separated by LOCATION_SPLITTER</p>
+	 *
+	 * @param location location to serialize
+	 * @return serialized location
+	 */
 	public static String toString(Location location) {
 		Objects.requireNonNull(location, "location");
 		
@@ -30,8 +38,16 @@ public final class LocationUtil {
 		return joiner.toString();
 	}
 	
-	public static Location fromString(String serializedLocation)
-	{
+	/**
+	 * Deserializers a string to a {@link Location}
+	 *
+	 * @param serializedLocation the serialized location
+	 * @return a location from {@code serializedLocation}
+	 * @throws IndexOutOfBoundsException if there aren't enough array elements when the {@code serializedLocation}
+	 * is split up by LOCATION_SPLITTER
+	 * @throws NullPointerException if the deserialize world does not exists
+	 */
+	public static Location fromString(String serializedLocation) {
 		Objects.requireNonNull(serializedLocation, "content");
 		
 		String[] sections = LocationUtil.LOCATION_SPLITTER.split(serializedLocation);

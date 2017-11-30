@@ -22,6 +22,9 @@ import java.util.Set;
 
 public class LockListener implements Listener {
 	
+	/**
+	 * All materials which can be locked
+	 */
 	private static final Set<Material> LOCK_MATERIALS = EnumSet.of(Material.CHEST, Material.ENDER_CHEST,
 			Material.ANVIL, Material.FURNACE, Material.BURNING_FURNACE, Material.ACACIA_DOOR, Material.BIRCH_DOOR,
 			Material.DARK_OAK_DOOR, Material.IRON_DOOR, Material.JUNGLE_DOOR, Material.SPRUCE_DOOR,
@@ -51,6 +54,7 @@ public class LockListener implements Listener {
 		LockAccount account = this.registryLazy.get().getAccount(player.getUniqueId());
 		
 		if (lockFound != null) {
+			// player cannot access the locked object
 			if (!player.hasPermission(LockListener.BYPASS_PERMISSION) && !lockFound.getOwner().equals(player.getUniqueId())) {
 				event.setCancelled(true);
 				event.setUseInteractedBlock(Event.Result.DENY);
@@ -85,6 +89,8 @@ public class LockListener implements Listener {
 			return;
 		}
 		
+		// lock a new object
+		
 		event.setCancelled(true);
 		event.setUseInteractedBlock(Event.Result.DENY);
 		
@@ -104,6 +110,14 @@ public class LockListener implements Listener {
 		player.sendMessage(ChatUtil.toColour("&cYou have locked this object."));
 	}
 	
+	/**
+	 * Finds a lock at the specified location
+	 *
+	 * <p>Will return null if there is no lock at the location specified</p>
+	 *
+	 * @param location location of the lock to find
+	 * @return lock if present, otherwise null
+	 */
 	private Lock findLock(Location location) {
 		return this.registryLazy.get().streamAccounts()
 				.map(account -> account.getLock(location))
@@ -113,6 +127,15 @@ public class LockListener implements Listener {
 				.orElse(null);
 	}
 	
+	/**
+	 * Finds a second object to lock which corresponds to the origin block by using predicates within
+	 * {@link #isDoubleChestType(Block)}
+	 *
+	 * <p>Will return null if there is no corresponding object</p>
+	 *
+	 * @param block the origin block
+	 * @return corresponding object to {@code block}, otherwise null
+	 */
 	private Location findSecondChest(Block block) {
 		Block current = block.getRelative(0, 0, -1);
 		
@@ -141,6 +164,12 @@ public class LockListener implements Listener {
 		return null;
 	}
 	
+	/**
+	 * Checks if the block is a corresponding material type
+	 *
+	 * @param block block to check
+ 	 * @return true if it is a corresponding material type
+	 */
 	private boolean isDoubleChestType(Block block) {
 		Material type = block.getType();
 		return type == Material.CHEST || type == Material.TRAPPED_CHEST;

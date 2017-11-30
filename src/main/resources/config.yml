@@ -1,3 +1,4 @@
+# MySQL database settings - only required if account-type is sql
 mysql:
   host: localhost
   port: 3306
@@ -5,4 +6,5 @@ mysql:
   username: root
   password: password
 
+# Account type can be either one ("SQL", "PERSISTENT")
 account-type: persistent

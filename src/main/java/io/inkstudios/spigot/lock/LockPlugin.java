@@ -60,10 +60,18 @@ public final class LockPlugin extends JavaPlugin {
 		this.sqlDatabase.createDefaultTables();
 	}
 	
+	/**
+	 * @return the {@link AccountRegistry} instance
+	 */
 	public AccountRegistry getAccountRegistry() {
 		return this.accountRegistry;
 	}
 	
+	/**
+	 * <p>This instance will be null if {@link AccountType} does not equal {@link AccountType#MYSQL}</p>
+	 *
+	 * @return the {@link LockMySQLDatabase} instance
+	 */
 	public LockMySQLDatabase getSqlDatabase() {
 		return this.sqlDatabase;
 	}
