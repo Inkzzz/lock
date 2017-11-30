@@ -11,7 +11,7 @@ public interface PersistentData {
 	void markForWrite();
 	
 	/**
-	 * Unamrks a file to be written
+	 * Unmarks a file to be written
 	 */
 	void unmarkForWrite();
 	
