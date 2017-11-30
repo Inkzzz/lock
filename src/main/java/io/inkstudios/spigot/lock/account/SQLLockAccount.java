@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 final class SQLLockAccount extends SimpleLockAccount {
 	
-	private static final Pattern LOCK_LOCATION_SEPARATOR = Pattern.compile("|");
+	private static final Pattern LOCK_LOCATION_SEPARATOR = Pattern.compile("\\|");
 	
 	private final Object lock = new Object();
 	
@@ -97,8 +97,8 @@ final class SQLLockAccount extends SimpleLockAccount {
 				} else {
 					// update the information of the current record
 					try {
-						database.inject("INSERT INTO locks (UNIQUE_ID, LOCK_LOCATIONS) VALUES" +
-								" ('" + this.getUniqueId().toString() + "', '" + serializedLocations + "')" +
+						database.inject("INSERT INTO locks (LOCK_PKEY, UNIQUE_ID, LOCK_LOCATIONS) VALUES" +
+								" (" + lock.getId() + ", '" + this.getUniqueId().toString() + "', '" + serializedLocations + "')" +
 								" ON DUPLICATE KEY UPDATE LOCK_LOCATIONS = '" + serializedLocations + "';");
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -137,7 +137,7 @@ final class SQLLockAccount extends SimpleLockAccount {
 		String serializedLocations = this.serializeLocations(lock);
 		
 		try {
-			database.inject("DELETE * FROM locks WHERE LOCK_LOCATIONS = '" + serializedLocations + "' " +
+			database.inject("DELETE FROM locks WHERE LOCK_LOCATIONS = '" + serializedLocations + "' " +
 					"AND UNIQUE_ID = '" + this.getUniqueId().toString() + "';");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -152,7 +152,7 @@ final class SQLLockAccount extends SimpleLockAccount {
 		LockMySQLDatabase database = LockPlugin.getInstance().getSqlDatabase();
 		
 		try {
-			database.inject("DELETE * FROM locks WHERE LOCK_PKEY = " + lock.getId() + ";");
+			database.inject("DELETE FROM locks WHERE LOCK_PKEY = " + lock.getId() + ";");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
