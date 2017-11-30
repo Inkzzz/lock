@@ -26,6 +26,8 @@ public class LockListener implements Listener {
 			Material.DARK_OAK_DOOR, Material.IRON_DOOR, Material.JUNGLE_DOOR, Material.SPRUCE_DOOR,
 			Material.SPRUCE_DOOR, Material.TRAP_DOOR, Material.WOOD_DOOR, Material.WOODEN_DOOR);
 	
+	private static final String BYPASS_PERMISSION = "melondev.lock.bypass";
+	
 	private final Lazy<AccountRegistry> registryLazy = Lazy.of(() -> LockPlugin.getInstance().getAccountRegistry());
 	
 	@EventHandler
@@ -48,7 +50,7 @@ public class LockListener implements Listener {
 		LockAccount account = this.registryLazy.get().getAccount(player.getUniqueId());
 		
 		if (lockFound != null) {
-			if (!lockFound.getOwner().equals(player.getUniqueId())) {
+			if (!player.hasPermission(LockListener.BYPASS_PERMISSION) && !lockFound.getOwner().equals(player.getUniqueId())) {
 				event.setCancelled(true);
 				event.setUseInteractedBlock(Event.Result.DENY);
 				player.sendMessage(ChatUtil.toColour("&cThis object is locked."));
