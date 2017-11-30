@@ -18,6 +18,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+/**
+ * This is a skeletal {@link LockAccount} where all the data used in all types of lock accounts are held.
+ */
 abstract class SimpleLockAccount implements LockAccount {
 
 	private final UUID uniqueId;
@@ -27,11 +30,20 @@ abstract class SimpleLockAccount implements LockAccount {
 	private boolean marked;
 	private LockState lockState;
 	
+	/**
+	 * Constructs a new {@link SimpleLockAccount} instance
+	 * @param uniqueId the owner of the account
+	 * @param locks the pre-set locks of the account
+	 */
 	protected SimpleLockAccount(UUID uniqueId, List<Lock> locks) {
 		this.uniqueId = uniqueId;
 		locks.forEach(this::addLockWithoutSaving);
 	}
 	
+	/**
+	 * Constructs a new {@link SimpleLockAccount} instance
+	 * @param uniqueId the owner of the account
+	 */
 	protected SimpleLockAccount(UUID uniqueId) {
 		this.uniqueId = uniqueId;
 	}
@@ -88,6 +100,10 @@ abstract class SimpleLockAccount implements LockAccount {
 		}
 	}
 	
+	/**
+	 * Called when a lock is successfully removed
+	 * @param lock the lock removed
+	 */
 	abstract void removedLock(Lock lock);
 	
 	@Override

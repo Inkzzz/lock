@@ -18,10 +18,19 @@ final class SQLLockAccount extends SimpleLockAccount {
 	
 	private final Object lock = new Object();
 	
+	/**
+	 * Constructs a new {@link SQLLockAccount} instance
+	 * @param uniqueId the owner of the account
+	 * @param locks the pre-set locks of the account
+	 */
 	public SQLLockAccount(UUID uniqueId, List<Lock> locks) {
 		super(uniqueId, locks);
 	}
 	
+	/**
+	 * Constructs a new {@link SQLLockAccount} instance
+	 * @param uniqueId the owner of the account
+	 */
 	public SQLLockAccount(UUID uniqueId) {
 		super(uniqueId);
 	}
@@ -117,6 +126,11 @@ final class SQLLockAccount extends SimpleLockAccount {
 		}
 	}
 	
+	/**
+	 * Removes the lock from the database where the unique id is equal to the lock owner and the serialized
+	 * location string of the locks location are equal
+	 * @param lock the lock to remove from the database
+	 */
 	private void softInvalidation(Lock lock) {
 		LockMySQLDatabase database = LockPlugin.getInstance().getSqlDatabase();
 		
@@ -130,6 +144,10 @@ final class SQLLockAccount extends SimpleLockAccount {
 		}
 	}
 	
+	/**
+	 * Removes the lock from the database where the locks id is equal to LOCK_PKEY
+	 * @param lock the lock to remove from the dabatase
+	 */
 	private void hardInvalidation(Lock lock) {
 		LockMySQLDatabase database = LockPlugin.getInstance().getSqlDatabase();
 		

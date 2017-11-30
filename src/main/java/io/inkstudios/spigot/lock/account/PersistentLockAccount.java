@@ -18,6 +18,12 @@ final class PersistentLockAccount extends SimpleLockAccount {
 	private final File file;
 	private final FileConfiguration configuration;
 	
+	/**
+	 * Constructs a new {@link PersistentLockAccount} instance
+	 * @param uniqueId the owner of the account
+	 * @param locks the pre-set locks of the account
+	 * @param file the file of the account
+	 */
 	public PersistentLockAccount(UUID uniqueId, List<Lock> locks, File file) {
 		super(uniqueId, locks);
 		
@@ -25,6 +31,11 @@ final class PersistentLockAccount extends SimpleLockAccount {
 		this.configuration = YamlConfiguration.loadConfiguration(file);
 	}
 	
+	/**
+	 * Constructs a new {@link PersistentLockAccount} instance
+	 * @param uniqueId the owner of the account
+	 * @param file the file of the account
+	 */
 	public PersistentLockAccount(UUID uniqueId, File file) {
 		super(uniqueId);
 		
@@ -70,6 +81,9 @@ final class PersistentLockAccount extends SimpleLockAccount {
 		}
 	}
 	
+	/**
+	 * Removes all locks from the file, and then sets all the current locks
+	 */
 	private void setLocksToFile() {
 		this.configuration.set("locks", null);
 		

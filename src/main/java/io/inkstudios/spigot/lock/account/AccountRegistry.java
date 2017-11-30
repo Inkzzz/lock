@@ -21,10 +21,20 @@ public final class AccountRegistry {
 	
 	private final AccountType accountType;
 	
+	/**
+	 * Constructs an {@link AccountRegistry} of the specified {@link AccountRegistry} {@code accountType}
+	 *
+	 * @param accountType the account type of the registry
+	 */
 	public AccountRegistry(AccountType accountType) {
 		this.accountType = accountType;
 	}
 	
+	/**
+	 * Loads player data
+	 *
+	 * <p>Only loads player data if the account type is persistent</p>
+	 */
 	public void loadPlayerData() {
 		if (this.accountType != AccountType.PERSISTENT) {
 			return;
@@ -50,6 +60,9 @@ public final class AccountRegistry {
 		});
 	}
 	
+	/**
+	 * Creates the players directory within dir 'plugins/locks'
+	 */
 	private void createPlayerDataFolderIfNotExists() {
 		Path path = this.lazyPlayerDataPath.get();
 		
@@ -62,10 +75,25 @@ public final class AccountRegistry {
 		}
 	}
 	
+	/**
+	 * Gets the yaml file related to the unique id {@code uniqueId}
+	 *
+	 * @param uniqueId the owner of the file
+	 * @return the file related to {@code uniqueId}
+	 */
 	private File getDataFile(UUID uniqueId) {
 		return this.getDataFile(this.lazyPlayerDataPath.get(), uniqueId.toString());
 	}
 	
+	/**
+	 * Gets a yaml file within path {@code path} with the name {@code pointer}
+	 *
+	 * <p>Attempts to create the file if it doesn't exists</p>
+	 *
+	 * @param path the path to the file
+	 * @param pointer the name of the file
+	 * @return
+	 */
 	private File getDataFile(Path path, String pointer) {
 		File file = path.resolve(pointer + ".yml").toFile();
 	
@@ -80,35 +108,14 @@ public final class AccountRegistry {
 		return file;
 	}
 	
-	private Path getDataFolder(String pointer) {
-		Path file = this.lazyPlayerDataPath.get().resolve(pointer + ".yml");
-		
-		if (!this.validateFile(file)) {
-			try {
-				Files.createDirectories(file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return file;
-	}
-	
-	private boolean validateFile(Path file)
-	{
-		if (Files.exists(file))
-		{
-			if (Files.isRegularFile(file))
-			{
-				return true;
-			}
-			
-			throw new IllegalStateException(file + " must be a regular file");
-		}
-		
-		return false;
-	}
-	
+	/**
+	 * Resolves the name of a path
+	 *
+	 * <p>The extension of the file is excluded</p>
+	 *
+	 * @param path the path to resolve the name of
+	 * @return the resolved name
+	 */
 	private String resolveName(Path path) {
 		String name = path.getFileName().toString();
 		
@@ -120,14 +127,31 @@ public final class AccountRegistry {
 		return name.substring(0, lastIndex);
 	}
 	
+	/**
+	 * Returns the {@link LockAccount} related to {@code uniqueId}
+	 *
+	 * @param uniqueId the uniqueId of the account to fetch
+	 * @return the lock account related to the uniqueId
+	 */
 	public LockAccount getAccount(UUID uniqueId) {
 		return this.lockAccounts.computeIfAbsent(uniqueId, this::createAccount);
 	}
 	
+	/**
+	 * Invalidates the {@link LockAccount} related to the unique id {@code uniqueId}
+	 *
+	 * @param uniqueId the unique id of the account to invalidate
+	 */
 	public void invalidateAccount(UUID uniqueId) {
 		this.lockAccounts.remove(uniqueId);
 	}
 	
+	/**
+	 * Creates a {@link LockAccount} related to the unique id {@code uniqueId}
+	 *
+	 * @param uniqueId the unique id related to the account
+	 * @return a new {@link LockAccount} instance, depending on the configuration
+	 */
 	private LockAccount createAccount(UUID uniqueId) {
 		switch (this.accountType) {
 			case PERSISTENT:
@@ -142,6 +166,9 @@ public final class AccountRegistry {
 		}
 	}
 	
+	/**
+	 * @return a stream of all registered {@link LockAccount}'s
+	 */
 	public Stream<LockAccount> streamAccounts() {
 		return this.lockAccounts.values().stream();
 	}
