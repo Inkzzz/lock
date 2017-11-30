@@ -83,8 +83,12 @@ abstract class SimpleLockAccount implements LockAccount {
 		if (this.locks.remove(lock)) {
 			this.markForWrite();
 			lock.getLockLocations().forEach(this.locationToLock::remove);
+			
+			this.removedLock(lock);
 		}
 	}
+	
+	abstract void removedLock(Lock lock);
 	
 	@Override
 	public void removeLock(Location location) {

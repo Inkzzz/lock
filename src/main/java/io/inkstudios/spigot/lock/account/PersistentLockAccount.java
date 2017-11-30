@@ -85,4 +85,9 @@ final class PersistentLockAccount extends SimpleLockAccount {
 		}
 	}
 	
+	@Override
+	void removedLock(Lock lock) {
+		// ignore as not required for flat files
+	}
+	
 }

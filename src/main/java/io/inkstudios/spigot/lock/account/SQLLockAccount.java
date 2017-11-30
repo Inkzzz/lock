@@ -64,8 +64,7 @@ final class SQLLockAccount extends SimpleLockAccount {
 		
 		synchronized (this.lock) {
 			for (Lock lock : this.getLocks()) {
-				String serializedLocations = lock.getLockLocations().stream().map(LocationUtil::toString)
-						.collect(Collectors.joining(SQLLockAccount.LOCK_LOCATION_SEPARATOR.pattern()));
+				String serializedLocations = this.serializeLocations(lock);
 				
 				// lock.id == -1 - new record
 				if (lock.getId() == -1) {
@@ -99,6 +98,45 @@ final class SQLLockAccount extends SimpleLockAccount {
 			}
 			
 			this.unmarkForWrite();
+		}
+	}
+	
+	private String serializeLocations(Lock lock) {
+		return lock.getLockLocations().stream().map(LocationUtil::toString)
+				.collect(Collectors.joining(SQLLockAccount.LOCK_LOCATION_SEPARATOR.pattern()));
+	}
+	
+	@Override
+	void removedLock(Lock lock) {
+		synchronized (this.lock) {
+			if (lock.getId() == -1) {
+				this.softInvalidation(lock);
+			} else {
+				this.hardInvalidation(lock);
+			}
+		}
+	}
+	
+	private void softInvalidation(Lock lock) {
+		LockMySQLDatabase database = LockPlugin.getInstance().getSqlDatabase();
+		
+		String serializedLocations = this.serializeLocations(lock);
+		
+		try {
+			database.inject("DELETE * FROM locks WHERE LOCK_LOCATIONS = '" + serializedLocations + "' " +
+					"AND UNIQUE_ID = '" + this.getUniqueId().toString() + "';");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void hardInvalidation(Lock lock) {
+		LockMySQLDatabase database = LockPlugin.getInstance().getSqlDatabase();
+		
+		try {
+			database.inject("DELETE * FROM locks WHERE LOCK_PKEY = " + lock.getId() + ";");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	
